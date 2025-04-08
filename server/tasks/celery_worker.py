@@ -38,6 +38,8 @@ def process_image_task(job_id: str, method: str):
         input_path = Path(f"static/uploads/{job_id}.original.png")
         output_path = Path(f"static/results/{job_id}.png")
 
+        logger.info(f"[CELERY] Input: {input_path} | Exists: {input_path.exists()}")
+
         # 상태를 처리중으로 업데이트
         update_meta_status(job_id, "처리중")
 

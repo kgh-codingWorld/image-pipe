@@ -25,8 +25,8 @@ async def upload_route(file:UploadFile = File(...), method:str=Form(...)):
     logger.info(f"작업 ID 생성 완료: {job_id}")
 
     # 파일 저장
-    save_uploaded_file(file, job_id)
-    logger.info(f"파일 저장 완료: {job_id}")
+    path = save_uploaded_file(file, job_id)
+    logger.info(f"파일 저장 완료: {path}")
     
     # 메타 정보 초기화
     record_meta(job_id=job_id, method=method, status="대기중")

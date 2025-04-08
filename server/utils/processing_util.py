@@ -1,8 +1,8 @@
+import subprocess
+import sys
 from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 import threading
-import multiprocessing
-import os
 
 # 
 # 처리 단위가 분리되어 있음(병렬 처리 가능해짐)
@@ -60,15 +60,13 @@ import os
 
 def apply_processing_multiprocess(input_path: Path, output_path: Path):
     """
-    멀티 프로세스 방식 - Unix 계열에서만 동작하고 Window는 NotImplementedError 뜸
+    멀티 프로세스 방식 - Unix 계열에서만 동작하고 Window는 NotImplementedError 뜸 → subprocess로 가능
     """
-    if os.name == "nt":
-        raise NotImplementedError("Windows 환경에서 멀티프로세스는 지원하지 않음.")
+    # if os.name == "nt":
+    #     raise NotImplementedError("Windows 환경에서 멀티프로세스는 지원하지 않음.")
 
-    def worker():
-        _process_image_pipeline(input_path, output_path)
-
-    p = multiprocessing.Process(target=worker)
-    p.start()
-    p.join()
+    subprocess.run(
+        [sys.executable, "server/services/multiprocess_worker.py", str(input_path), str(output_path)],
+        check=True
+    )
 

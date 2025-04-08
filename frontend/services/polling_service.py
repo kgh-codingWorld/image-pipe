@@ -1,6 +1,7 @@
 import time
 from frontend.utils.status_util import get_status
 from frontend.utils.download_util import download_image
+from server.configs.log_config import logger
 
 def poll_until_done(job_id:str, max_wait:int=30):
     """
@@ -10,15 +11,17 @@ def poll_until_done(job_id:str, max_wait:int=30):
     - 실패 상태 또는 타임아웃 발생 시 에러 메시지 반환
     """
     for _ in range(max_wait):
+        logger.info("polling 시작")
         time.sleep(1)
 
         # /status/{job_id} 호출
         status_info = get_status(job_id)
-
         if not status_info:
             raise ValueError(f"작업 상태 확인 실패: {job_id}")
+        logger.info(f"status_info: {status_info}")
 
         status = status_info.get("status")
+        logger.info(f"status: {status}")
 
         if status == "완료":
             img = download_image(status_info["result_url"])
